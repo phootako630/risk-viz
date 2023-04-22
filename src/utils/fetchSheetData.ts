@@ -1,6 +1,10 @@
-const { google } = require("googleapis");
+import { google } from "googleapis";
 
-const fetchSheetData = async (spreadsheetId, sheetName, apiKey) => {
+const fetchSheetData = async (
+    spreadsheetId: string,
+    sheetName: string,
+    apiKey: string
+) => {
     const sheets = google.sheets({ version: "v4", auth: apiKey });
 
     try {
@@ -12,9 +16,18 @@ const fetchSheetData = async (spreadsheetId, sheetName, apiKey) => {
         const [header, ...rows] = response.data.values;
 
         const data = rows.map((row) => {
-            const obj = {};
+            const obj: { [key: string]: any } = {};
             header.forEach((key, i) => {
-                obj[key] = row[i];
+                if (key === "Risk Factors" && row[i]) {
+                    try {
+                        obj[key] = JSON.parse(row[i]);
+                    } catch (error) {
+                        console.error("Error parsing Risk Factors JSON:", error);
+                        obj[key] = {};
+                    }
+                } else {
+                    obj[key] = row[i];
+                }
             });
             return obj;
         });
@@ -26,4 +39,4 @@ const fetchSheetData = async (spreadsheetId, sheetName, apiKey) => {
     }
 };
 
-module.exports = fetchSheetData;
+export default fetchSheetData;
