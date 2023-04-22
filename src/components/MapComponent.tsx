@@ -1,7 +1,7 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { LatLngTuple } from "leaflet";
-import L from "leaflet";
+import "react-leaflet-markercluster/dist/styles.min.css";
 
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import("react-leaflet").then((mod) => mod.TileLayer), { ssr: false });
@@ -21,13 +21,21 @@ interface MapComponentProps {
 const MapComponent: FC<MapComponentProps> = ({ data }) => {
     const defaultCenter: LatLngTuple = [20, 0];
     const defaultZoom = 2;
+    const [leafletLoaded, setLeafletLoaded] = useState(false);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            import("leaflet");
+            import("leaflet").then(() => {
+                setLeafletLoaded(true);
+            });
         }
     }, []);
 
+    if (!leafletLoaded) {
+        return <div>Loading...</div>;
+    }
+
+    const L = require("leaflet");
     const customMarkerIcon = L.icon({
         iconUrl: "/images/leaflet/marker-icon.png",
         iconRetinaUrl: "/images/leaflet/marker-icon-2x.png",
@@ -39,6 +47,7 @@ const MapComponent: FC<MapComponentProps> = ({ data }) => {
     });
 
     return (
+        <div style={{ height: "500px", width: "100%" }}>
         <MapContainer center={defaultCenter} zoom={defaultZoom} style={{ height: "100%", width: "100%" }}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -48,6 +57,7 @@ const MapComponent: FC<MapComponentProps> = ({ data }) => {
                 <Marker key={index} position={[item.lat, item.lng]} icon={customMarkerIcon} />
             ))}
         </MapContainer>
+        </div>
     );
 };
 
