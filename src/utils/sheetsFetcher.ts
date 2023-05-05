@@ -1,4 +1,4 @@
-import XLSX from 'xlsx';
+import { readExcelFile } from '@/utils/fileReader';
 
 export type RiskRating = number;
 
@@ -13,17 +13,18 @@ export type SheetData = {
 };
 
 export const fetchSheetData = async (): Promise<SheetData[]> => {
-    const file = XLSX.readFile('./public/datasets/data.xlsx');
-    const sheet = file.Sheets[file.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    const rows = await readExcelFile('./public/datasets/data.csv');
 
     if (rows.length) {
+
         const data = rows.slice(1).map((row) => {
             let riskFactors = {};
-            try {
-                riskFactors = JSON.parse(row[5] as string);
-            } catch (err) {
-                console.error('Error parsing risk factors JSON: ', err);
+            if (row[5]) {
+                try {
+                    riskFactors = JSON.parse(row[5] as string);
+                } catch (err) {
+                    console.error('Error parsing risk factors JSON: ', err);
+                }
             }
 
             return {
@@ -36,7 +37,7 @@ export const fetchSheetData = async (): Promise<SheetData[]> => {
                 riskRating: parseFloat(row[4] as string),
             };
         });
-
+        console.log('Fetched data:', rows[0]);
         return data;
     } else {
         console.log('No data found in the sheet.');

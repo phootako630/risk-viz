@@ -1,34 +1,20 @@
+
 import React from 'react';
+import Select from 'react-select';
 
-interface DecadeSelectorProps {
-    onDecadeChange: (decade: number) => void;
-}
+const options = [
+    { value: '2030', label: '2030' },
+    { value: '2040', label: '2040' },
+    { value: '2050', label: '2050' },
+    { value: '2060', label: '2060' },
+    { value: '2070', label: '2070' },
+];
 
-const DecadeSelector: React.FC<DecadeSelectorProps> = ({ onDecadeChange }) => {
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const decade = parseInt(event.target.value, 10);
-        onDecadeChange(decade);
-    };
-
-    return (
-        <div className="w-full flex justify-center mt-4">
-            <label htmlFor="decade" className="mr-2">
-                Select Decade:
-            </label>
-            <select
-                name="decade"
-                id="decade"
-                className="border-2 border-gray-300 rounded-md p-1"
-                onChange={handleChange}
-            >
-                <option value={2030}>2030s</option> {/* Corrected values */}
-                <option value={2040}>2040s</option>
-                <option value={2050}>2050s</option>
-                <option value={2060}>2060s</option>
-                <option value={2070}>2070s</option>
-            </select>
-        </div>
-    );
-};
+const DecadeSelector = ({ setSelectedDecade }) => (
+    <Select
+        options={options}
+        onChange={(selectedOption) => setSelectedDecade(selectedOption.value)}
+    />
+);
 
 export default DecadeSelector;

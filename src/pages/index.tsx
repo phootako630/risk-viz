@@ -1,29 +1,19 @@
-import { useState, useEffect } from 'react';
-import { MarkerData, getMarkersByDecade } from '@/utils/dataProcessor';
+import React, { useState } from 'react';
 import Map from '../components/Map';
-import DecadeSelector from '../components/DecadeSelector';
+import { useCSVData } from '@/utils/useCSVData';
+import dynamic from "next/dynamic";
 
-const IndexPage = () => {
-    const [markers, setMarkers] = useState<MarkerData[]>([]);
-
-    const handleDecadeChange = async (decade: number) => {
-        //console.log('Decade changed:', decade);
-        const newMarkers = await getMarkersByDecade(decade);
-        console.log('New markers:', newMarkers);
-        setMarkers(newMarkers);
-    };
-
-    useEffect(() => {
-        handleDecadeChange(2030);
-    }, []);
+const DecadeSelector = dynamic(() => import('../components/DecadeSelector'), {
+    ssr: false,
+});
+export default function Home() {
+    const [selectedDecade, setSelectedDecade] = useState('2030');
+    const data = useCSVData('/datasets/data.csv');
 
     return (
-        <div className="container mx-auto">
-            <h1 className="text-4xl text-center my-4">Climate Risk Map</h1>
-            <DecadeSelector onDecadeChange={handleDecadeChange} />
-            <Map markers={markers} />
+        <div>
+            <DecadeSelector setSelectedDecade={setSelectedDecade} />
+            <Map data={data} selectedDecade={selectedDecade} />
         </div>
     );
-};
-
-export default IndexPage;
+}
