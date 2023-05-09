@@ -1,0 +1,18 @@
+.sidebar {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 12px;
+    padding: 12px;
+    z-index: 1;
+    background-color: #404040;
+    color: #ffffff;
+}
+
+.map-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
