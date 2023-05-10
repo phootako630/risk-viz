@@ -1,109 +1,45 @@
-// src/components/DataTable.tsx
+"use client";
+import React, { useState } from "react";
+import { DataItem } from "@/app/api/types";
 
-import React, { useMemo } from 'react';
-import { useTable, useSortBy, useFilters } from 'react-table';
-
-function DefaultColumnFilter({
-                                 column: { filterValue, preFilteredRows, setFilter },
-                             }) {
-    const count = preFilteredRows.length;
-
-    return (
-        <input
-            value={filterValue || ''}
-            onChange={e => {
-                setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
-            }}
-            placeholder={`Search ${count} records...`}
-        />
-    );
-}
-
+// Define the DataTableProps interface
 interface DataTableProps {
-    data: any[];
+    data: DataItem[];
+    selectedRow: number | null;
+    setSelectedRow: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data }) => {
-    const columns = useMemo(
-        () => [
-            {
-                Header: 'Asset Name',
-                accessor: 'asset_name',
-            },
-            {
-                Header: 'Lat',
-                accessor: 'lat',
-            },
-            {
-                Header: 'Long',
-                accessor: 'long',
-            },
-            {
-                Header: 'Business Category',
-                accessor: 'business_category',
-            },
-            {
-                Header: 'Risk Rating',
-                accessor: 'risk_rating',
-            },
-            {
-                Header: 'Risk Factors',
-                accessor: 'risk_factors',
-            },
-            {
-                Header: 'Year',
-                accessor: 'year',
-            },
-        ],
-        []
-    );
+// Define the number of items to display per page
+const itemsPerPage = 100;
 
-    const defaultColumn = useMemo(
-        () => ({
-            Filter: DefaultColumnFilter,
-        }),
-        []
-    );
+// Function to fetch a specific page of data based on the provided page number and data array
+const fetchPage = (page: number, data: DataItem[]): DataItem[] => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-    } = useTable({ columns, data, defaultColumn }, useFilters, useSortBy);
+    return data.slice(startIndex, endIndex);
+}
 
-    return (
-        <table {...getTableProps()} style={{ width: '100%', textAlign: 'left' }}>
-            <thead>
-            {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column, i) => (
-                        <th key={i} {...column.getHeaderProps(column.getSortByToggleProps())}>
-                            {column.render('Header')}
-                            <span>
-                  {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                </span>
-                            <div>{column.canFilter ? column.render('Filter') : null}</div>
-                        </th>
-                    ))}
-                </tr>
-            ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-                prepareRow(row);
-                return (
-                    <tr key={i} {...row.getRowProps()}>
-                        {row.cells.map((cell, j) => {
-                            return <td key={j} {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                        })}
-                    </tr>
-                );
-            })}
-            </tbody>
-        </table>
-    );
-};
+// Define the DataTable component
+const DataTable: React.FC<DataTableProps> = ({
+    data,
+    selectedRow,
+    setSelectedRow,
+}) => {
+    const [filterTerm, setFilterTerm] = useState("");
+    const [selectedYear, setSelectedYear] = useState<number | null>(null);
+    const [selectedRiskFactor, setSelectedRiskFactor] = useState<string | null>(null);
+    const [selectedBusinessCategory, setSelectedBusinessCategory] = useState<string | null>(null);
+    const [selectedRiskRating, setSelectedRiskRating] = useState<number | null>(null);
 
-export default DataTable;
+    // State for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+
+    // Handler function for updating the current page
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+    }
+return (
+    <div className="w-full h-full"></div>
+);
+}
