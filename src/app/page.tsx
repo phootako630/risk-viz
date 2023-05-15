@@ -5,6 +5,7 @@ import Head from "./head";
 import {fetchDataFromStorage} from "@/app/utils/fetchDataStorage";
 import Navbar from "@/components/Navbar";
 import RiskMap from "@/components/RiskMap";
+import DataTable from "@/components/DataTable";
 
 interface RiskFactor {
     [key: string]: number;
@@ -22,6 +23,8 @@ export default function Home() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<number | null>(null);
     const [selectedDataPoint, setSelectedDataPoint] = useState<SelectedDataPoint | null>(null);
+
+    const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
     const mapRef: RefObject<HTMLHeadingElement> = useRef(null);
     const dataRef: RefObject<HTMLHeadingElement> = useRef(null);
@@ -100,6 +103,16 @@ export default function Home() {
                     <RiskMap data={data} selectedDataPoint={selectedDataPoint} />
                 </div>
                 </Suspense>
+            <div className="bg-gray-200 rounded-lg p-6 shadow-md mb-8">
+                <h1>
+                    Climate Risk Data Table
+                </h1>
+                <DataTable
+                    data={data}
+                    selectedRow={selectedRow}
+                    setSelectedRow={setSelectedRow}
+                    />
+            </div>
         </>
     );
 }
