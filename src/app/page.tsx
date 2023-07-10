@@ -6,6 +6,7 @@ import {fetchDataFromStorage} from "@/app/utils/fetchDataStorage";
 import Navbar from "@/components/Navbar";
 import RiskMap from "@/components/RiskMap";
 import DataTable from "@/components/DataTable";
+import BarChart from "@/components/GraphsAndCharts/BarChart";
 
 interface RiskFactor {
     [key: string]: number;
