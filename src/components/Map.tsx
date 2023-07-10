@@ -115,10 +115,12 @@ const MapBox: React.FC<MapBoxProps> = ({ data }) => {
                         </div>
         `;
                         // Create a new popup and set its coordinates and HTML content, then add it to the map
-                        popup = new mapboxgl.Popup()
-                            .setLngLat(coordinates)
-                            .setHTML(html)
-                            .addTo(mapRef.current);
+                        if(coordinates.length === 2) {
+                            popup = new mapboxgl.Popup()
+                                .setLngLat(coordinates as [number, number])
+                                .setHTML(html)
+                                .addTo(mapRef.current);
+                        }
                     }
                 }
             });
