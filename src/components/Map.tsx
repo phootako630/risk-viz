@@ -3,6 +3,7 @@ import mapboxgl, { Marker, Popup } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Feature, Point } from "geojson";
 import { DataItem } from "@/app/api/types";
+import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
 interface MapBoxProps {
     data: DataItem[];
@@ -86,8 +87,8 @@ const MapBox: React.FC<MapBoxProps> = ({ data }) => {
             });
 
             // Change the cursor style as a UI indicator when hovering over a marker
-            mapRef.current.on("mouseenter", "markers", (e) => {
-                if (mapRef.current) {
+            mapRef.current.on("mouseenter", "markers", (e: {features: MapboxGeoJSONFeature[]}) => {
+                if (mapRef.current  && e.features && e.features.length > 0) {
                     mapRef.current.getCanvas().style.cursor = "pointer";
                     const coordinates = (e.features[0].geometry as any).coordinates.slice();
                     const assetName = e.features[0].properties.assetName;
