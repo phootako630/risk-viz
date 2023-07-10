@@ -91,7 +91,7 @@ const MapBox: React.FC<MapBoxProps> = ({ data }) => {
                 if (mapRef.current  && e.features && e.features.length > 0) {
                     mapRef.current.getCanvas().style.cursor = "pointer";
                     const feature = e.features[0];
-                    if (feature.properties) {
+                    if (feature.properties && feature.geometry.type === 'Point') {
                         const coordinates = feature.geometry.coordinates.slice();
                         const assetName = feature.properties.assetName;
                         const businessCategory = feature.properties.businessCategory;
