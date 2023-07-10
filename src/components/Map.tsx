@@ -92,11 +92,11 @@ const MapBox: React.FC<MapBoxProps> = ({ data }) => {
                     mapRef.current.getCanvas().style.cursor = "pointer";
                     const feature = e.features[0];
                     if (feature.properties) {
-                        const coordinates = (e.features[0].geometry as any).coordinates.slice();
-                        const assetName = e.features[0].properties.assetName;
-                        const businessCategory = e.features[0].properties.businessCategory;
-                        const year = e.features[0].properties.year;
-                        const riskRating = e.features[0].properties.riskRating.toFixed(2);
+                        const coordinates = feature.geometry.coordinates.slice();
+                        const assetName = feature.properties.assetName;
+                        const businessCategory = feature.properties.businessCategory;
+                        const year = feature.properties.year;
+                        const riskRating = feature.properties.riskRating.toFixed(2)
 
                         // Ensure that if the map is zoomed out such that multiple copies of the feature are visible, the popup appears over the copy being pointed to
                         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
