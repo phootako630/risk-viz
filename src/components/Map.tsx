@@ -90,16 +90,19 @@ const MapBox: React.FC<MapBoxProps> = ({ data }) => {
             mapRef.current.on("mouseenter", "markers", (e) => {
                 if (mapRef.current  && e.features && e.features.length > 0) {
                     mapRef.current.getCanvas().style.cursor = "pointer";
-                    const coordinates = (e.features[0].geometry as any).coordinates.slice();
-                    const assetName = e.features[0].properties.assetName;
-                    const businessCategory = e.features[0].properties.businessCategory;
-                    const year = e.features[0].properties.year;
-                    const riskRating = e.features[0].properties.riskRating.toFixed(2);
-                    // Ensure that if the map is zoomed out such that multiple copies of the feature are visible, the popup appears over the copy being pointed to
-                    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                    }
-                    const html = `
+                    const feature = e.features[0];
+                    if (feature.properties) {
+                        const coordinates = (e.features[0].geometry as any).coordinates.slice();
+                        const assetName = e.features[0].properties.assetName;
+                        const businessCategory = e.features[0].properties.businessCategory;
+                        const year = e.features[0].properties.year;
+                        const riskRating = e.features[0].properties.riskRating.toFixed(2);
+
+                        // Ensure that if the map is zoomed out such that multiple copies of the feature are visible, the popup appears over the copy being pointed to
+                        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                        }
+                        const html = `
                         <div 
                         class="text-gray-800"
                         style="color: #333; padding: 10px;">
@@ -111,11 +114,12 @@ const MapBox: React.FC<MapBoxProps> = ({ data }) => {
                                 <p style="margin: 5px 0;">Risk Rating: <strong>${riskRating}</strong></p>
                         </div>
         `;
-                    // Create a new popup and set its coordinates and HTML content, then add it to the map
-                    popup = new mapboxgl.Popup()
-                        .setLngLat(coordinates)
-                        .setHTML(html)
-                        .addTo(mapRef.current);
+                        // Create a new popup and set its coordinates and HTML content, then add it to the map
+                        popup = new mapboxgl.Popup()
+                            .setLngLat(coordinates)
+                            .setHTML(html)
+                            .addTo(mapRef.current);
+                    }
                 }
             });
 
