@@ -87,7 +87,7 @@ const MapBox: React.FC<MapBoxProps> = ({ data }) => {
             });
 
             // Change the cursor style as a UI indicator when hovering over a marker
-            mapRef.current.on("mouseenter", "markers", (e: {features: MapboxGeoJSONFeature[]}) => {
+            mapRef.current.on("mouseenter", "markers", (e) => {
                 if (mapRef.current  && e.features && e.features.length > 0) {
                     mapRef.current.getCanvas().style.cursor = "pointer";
                     const coordinates = (e.features[0].geometry as any).coordinates.slice();
